@@ -12,6 +12,7 @@ import lombok.Setter;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 @RequestMapping("/books")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:8080")
 public class BookController {
 
     private final BookService bookService;
@@ -39,8 +41,8 @@ public class BookController {
     }
 
     @GetMapping("/find")
-    public List<BookResponseDTO> getBookByName(@RequestParam("name") String name) {
-        return bookService.getBookByName(name);
+    public List<BookResponseDTO> getBookByName(@RequestParam("title") String title) {
+        return bookService.getBookByName(title);
     }
 
     @PostMapping("/add")
@@ -49,12 +51,12 @@ public class BookController {
     }
     
     @PutMapping("/update/{id}")
-    public BookResponseDTO updateBook(@PathVariable String id, @RequestBody BookRequestDTO book) {
+    public BookResponseDTO updateBook(@PathVariable int id, @RequestBody BookRequestDTO book) {
         return bookService.updateBook(id, book);
     }
 
     @DeleteMapping("/del/{id}")
-    public void deleteBook(@PathVariable String id){
+    public void deleteBook(@PathVariable int id){
         bookService.deleteBook(id);
     }
     

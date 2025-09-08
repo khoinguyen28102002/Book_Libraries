@@ -1,6 +1,7 @@
 CREATE TABLE book (
-    id VARCHAR(255) PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    author VARCHAR(255) NOT NULL,
-    price VARCHAR(255) NOT NULL
+    id BIGINT PRIMARY KEY DEFAULT (floor(random() * 90000000) + 10000000),
+    title VARCHAR(255),
+    author VARCHAR(255),
+    price VARCHAR(50),
+    quantity INT
 );

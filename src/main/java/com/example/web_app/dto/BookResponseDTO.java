@@ -7,13 +7,15 @@ import lombok.Setter;
 @Setter
 public class BookResponseDTO {
 
-    private String id;
+    private int id;
 
-    private String name;
+    private String title;
 
     private String author;
     
     private String price;
 
+    private int quantity;
 
+    private String image_url;
 }

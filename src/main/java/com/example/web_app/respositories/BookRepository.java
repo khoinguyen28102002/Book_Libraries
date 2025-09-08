@@ -14,6 +14,7 @@ import com.example.web_app.models.Book;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -27,25 +28,27 @@ public class BookRepository {
 
     private final RowMapper<Book> bookRowMapper = (rs, rowNum) -> {
         Book book = new Book();
-        book.setId(rs.getString("id"));
-        book.setName(rs.getString("name"));
+        book.setId(rs.getInt("id"));
+        book.setTitle(rs.getString("title"));
         book.setAuthor(rs.getString("author"));
         book.setPrice(rs.getString("price"));
+        book.setQuantity(rs.getInt("quantity"));
+        book.setImage_url(rs.getString("image_url"));
         return book;
     };
 
     public List<Book> findAll() {
-        return jdbcTemplate.query("SELECT * FROM postgresql.public.book", bookRowMapper);
+        return jdbcTemplate.query("SELECT * FROM " + TABLE_NAME, bookRowMapper);
     }
 
-    public List<Book> findBookByName(String name){
+    public List<Book> findBookByTitle(String title){
         return jdbcTemplate.query(
-            "SELECT * FROM " + TABLE_NAME + " WHERE name = ?", 
+            "SELECT * FROM " + TABLE_NAME + " WHERE title = ?", 
             bookRowMapper, 
-            name
+            title
         );
     }
-    public Book findById(String id){
+    public Book findById(int id){
         try{
             return jdbcTemplate.queryForObject(
                 "SELECT * FROM " + TABLE_NAME + " WHERE id = ?", 
@@ -57,28 +60,44 @@ public class BookRepository {
         }
 
     }
+    private boolean isValidId(int id, String title, String author) {
+        String sql = "SELECT COUNT(*) FROM " + TABLE_NAME + " WHERE id = ? AND (title <> ? OR author <> ?)";
+
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id, title, author);
+        int value = (count != null) ? count.intValue() : 0;
+        return value == 0;
+    }
+
     public Book addNewBook(Book book){
-        String id = UUID.randomUUID().toString();
-        String sql = "INSERT INTO " + TABLE_NAME + " (id, name, author, price) VALUES (?, ?, ?, ?)";
+        int id;
+        do {
+            id = 10000000 + new Random().nextInt(90000000);
+        } while (!isValidId(id, book.getTitle(), book.getAuthor()));
+
+        String sql = "INSERT INTO " + TABLE_NAME + " (id, title, author, price, quantity, image_url) VALUES (?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(
             sql,
             id,
-            book.getName(),
+            book.getTitle(),
             book.getAuthor(),
-            book.getPrice()
+            book.getPrice(),
+            book.getQuantity(),
+            book.getImage_url()
         );
 
         book.setId(id);
         return book;
     }
     public Book updateBook(Book book) {
-        String sql = "UPDATE " + TABLE_NAME + " SET name = ?, author = ?, price = ? WHERE id = ?";
+        String sql = "UPDATE " + TABLE_NAME + " SET title = ?, author = ?, price = ?, quantity = ?, image_url = ? WHERE id = ?";
         
         int rowsAffected = jdbcTemplate.update(sql, 
-            book.getName(), 
+            book.getTitle(), 
             book.getAuthor(), 
             book.getPrice(), 
+            book.getQuantity(),
+            book.getImage_url(),
             book.getId()
         );
 
@@ -89,7 +108,7 @@ public class BookRepository {
         return findById(book.getId());
     }
 
-    public void deleteById(String id){
+    public void deleteById(int id){
         jdbcTemplate.update(
             "DELETE FROM " + TABLE_NAME + " WHERE id = ?", id
         );

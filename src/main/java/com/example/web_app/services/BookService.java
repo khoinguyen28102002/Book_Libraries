@@ -29,12 +29,12 @@ public class BookService {
                 .toList();
     }
 
-    public List<BookResponseDTO> getBookByName(String name){
-        if(name == ""){
+    public List<BookResponseDTO> getBookByName(String title){
+        if(title == ""){
             throw new ApiException("No name field!", HttpStatus.BAD_REQUEST);
         }
         
-        return bookRepo.findBookByName(name).stream()
+        return bookRepo.findBookByTitle(title).stream()
                 .map(MapperBook::modelToResponseDto)
                 .toList();
     }
@@ -44,22 +44,24 @@ public class BookService {
         return MapperBook.modelToResponseDto(bookRepo.addNewBook(modelBook));
     }
 
-    public BookResponseDTO updateBook(String id, BookRequestDTO book){
+    public BookResponseDTO updateBook(int id, BookRequestDTO book){
         Book repositoryBook = bookRepo.findById(id);
         if(repositoryBook == null){
             throw new ApiException("Not found book by id: " + id, HttpStatus.NOT_FOUND);
         }
 
-        repositoryBook.setName(book.getName());
+        repositoryBook.setTitle(book.getTitle());
         repositoryBook.setAuthor(book.getAuthor());
         repositoryBook.setPrice(book.getPrice());
+        repositoryBook.setQuantity(book.getQuantity());
+        repositoryBook.setImage_url(book.getImage_url());
 
         Book savedBook = bookRepo.updateBook(repositoryBook);
 
         return MapperBook.modelToResponseDto(savedBook);
     }
 
-    public void deleteBook(String id){
+    public void deleteBook(int id){
         bookRepo.deleteById(id);
     }
 }

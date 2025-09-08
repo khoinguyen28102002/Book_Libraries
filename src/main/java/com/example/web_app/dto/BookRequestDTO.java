@@ -6,7 +6,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookRequestDTO {
-    private String name;
+    private String title;
     private String author;
     private String price;
+    private int quantity;
+    private String image_url;
 }

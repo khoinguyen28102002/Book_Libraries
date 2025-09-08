@@ -15,13 +15,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Book {
     
-    private String id;
+    private int id;
 
-    private String name;
+    private String title;
   
     private String author;
     
     private String price;
+
+    private int quantity;
+
+    private String image_url;
 
     public Book(){};
 }
