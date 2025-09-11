@@ -10,8 +10,9 @@
 
  body {
   margin: 0px;
-  padding: 0px;
-  background-color: rgb(235, 235, 235);
+  /* padding: 0px; */
+  font-family: "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background: linear-gradient(to right, #74ebd5, #ACB6E5);
 }
 
 #app {

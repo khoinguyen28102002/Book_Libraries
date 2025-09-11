@@ -9,10 +9,8 @@
                 <li v-for="(item, index) in menu" 
                     :key="index"
                     :class="{ active: activeIndex === index }"
-                    @click="setActive(index)">
-                      <!-- <router-link :to="item.url">{{ item.name }}</router-link> -->
+                    @click="navigateTo(item.url, index)">
                        <RouterLink :to="item.url">{{ item.name }}</RouterLink>
-                       <!-- {{ item.name }} -->
                 </li>
             </ul>
         </nav>
@@ -34,16 +32,21 @@
 
 <script setup>
     import {ref} from "vue"
+    import { useRouter } from 'vue-router';
+    
+    const router = useRouter();
+
 
     const menu = ref([
-        { name: 'Library', url: '/library'},
-        { name: 'Manage', url: '/manage'}
+        { name: 'Manage', url: '/manage'},
+        { name: 'Add new', url: '/addnew' } // replace /addnew when Add new page is ready
     ]);
     const activeIndex = ref(0);
     const isOpen = ref(0);
 
-    function setActive(index){
+    function navigateTo(url, index) {
         activeIndex.value = index;
+        router.push(url);
     }
 </script>
 
@@ -52,12 +55,12 @@
     box-sizing: border-box;
     justify-content: center;
     align-items: center;
-    /* font-family: "Lucida Console", "Courier New", monospace; */
 }
 .container {
     width: 100vw;
     height: 100px;
     margin-top:0px;
+    margin-bottom: 30px;
     background-color: white;
     display: flex;
     border-radius: 0px 0px 40px 40px;

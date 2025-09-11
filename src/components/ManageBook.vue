@@ -1,19 +1,6 @@
 <template>
     <app-header></app-header>
-    <!-- <div class="action-tabs"> 
-
-    </div> -->
-    <nav class="action-tabs">
-        <ul>
-            <li v-for="(item, index) in actionTabs" 
-                :key="index"
-                :class="{ active: activeIndex === index }"
-                @click="setDisplayTab(index)">
-                {{ item }}
-            </li>
-        </ul>
-    </nav>
-    <div class="table-wrapper" v-show="currentDisplay === actionTabs[0]">
+    <div class="table-wrapper">
         <div class="table-container">
             <table>
                 <thead>
@@ -23,6 +10,7 @@
                         <th>Author</th>
                         <th>Price</th>
                         <th style="text-align: right;">Number in stock</th>
+                        <th style="text-align: center;"> Actions </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,7 +26,6 @@
                         <td id="actions"> 
                             <button> <i class="fas fa-edit"></i>  </button>
                             <button @click="bookStore.deleteBook(book.id)"> <i class="fa-solid fa-trash"></i> </button>
-                            
                         </td>
                     </tr>
                 </tbody>
@@ -46,26 +33,6 @@
         </div>
     </div>
 
-    <div class="add-book" v-show="currentDisplay === actionTabs[1]">
-        <form @submit.prevent="addNewBook">
-            <label for="title">Title</label>
-            <input type="text" id="title" name="title" v-model="addBookInfo.title" placeholder="Title of this book..">
-
-            <label for="author">Author</label>
-            <input type="text" id="author" name="author" v-model="addBookInfo.author" placeholder="Author of this book..">
-
-
-            <label for="price">Price</label>
-            <input type="text" id="price" name="price" v-model="addBookInfo.price" placeholder="Price of this book..">
-
-            <label for="quantity"></label>
-            <input type="text" id="quantity" name="quantity" v-model="addBookInfo.quantity" placeholder="Number of this book..">
-
-            <label for="imageurl"></label>
-            <input type="text" id="imageurl" name="imageurl" v-model="addBookInfo.image_url" placeholder="Image url of this book..">
-            <input type="submit" value="Submit">
-        </form>
-    </div>
 </template>
 
 <script setup>
@@ -98,61 +65,17 @@
     }
 </script>
 
-<style>
-.action-tabs{
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-}
-.action-tabs ul {
-    width: 80%;
-    list-style-type: none;
-    margin: 20px auto;
-    padding: 0;
-    height: 100%;
-    display: flex;
-    gap: 30px;
-}
-.action-tabs li {
-    height: 50px;
-    width: 170px;
-    text-align: center;
-    align-content: center;
-    /* border: 1px solid transparent;
-    border-radius: 40px; */
-}
-.action-tabs li {
-    padding: 14px 16px;
-    text-decoration: none;
-    color: black;
-    font-size: 18px;
-    transition: all 0.3s ease;
-}
-
-.action-tabs li:hover {
-    background-color: #ececec;
-    border-color: #9a9a9a;
-    cursor: pointer;
-    /* transform: scale(1.1);; */
-}
-.action-tabs .active{
-    font-weight: bolder;
-    border-bottom: 2px solid black ;
-}
+<style scoped>
 
 .table-wrapper {
   position: relative;
   border-radius: 0.5rem;
-  overflow: hidden;
   margin-bottom: 30px;
 }
 
 .table-container {
     width: 80%;
-    max-height: 24rem;
-    overflow-y: auto;
     height: 100%;
-    scrollbar-width: none;
     margin: auto;
     border-bottom: 2px solid #15928a;
     border-radius: 0.5rem;
@@ -167,9 +90,7 @@ td {
   border: none;
   padding: 1rem 2rem;
   text-align: left;
-  /* &:last-of-type {
-    text-align: right;
-  } */
+  vertical-align: middle;
 }
 
 th {
@@ -194,9 +115,16 @@ tbody {
 }
 
 #actions{
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+    text-align: center;
+    align-items: center;
+    padding: 1rem 2rem ;
+}
+#actions button{
+    margin: 5px;
+    width: 40px;
+    height: 40px;
+    border: #ccc 1px solid;
+    border-radius: 15px;
 }
 .add-book{
     width: 80%;
