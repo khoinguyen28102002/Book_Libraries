@@ -3,12 +3,14 @@ package com.example.web_app.respositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.example.web_app.exceptions.ApiException;
 import com.example.web_app.models.Book;
 
 import java.sql.PreparedStatement;
@@ -76,7 +78,7 @@ public class BookRepository {
 
         String sql = "INSERT INTO " + TABLE_NAME + " (id, title, author, price, quantity, image_url) VALUES (?, ?, ?, ?, ?, ?)";
 
-        jdbcTemplate.update(
+        int rowsAffected = jdbcTemplate.update(
             sql,
             id,
             book.getTitle(),
@@ -86,6 +88,9 @@ public class BookRepository {
             book.getImage_url()
         );
 
+        if (rowsAffected == 0) {
+            throw new ApiException("Failed to insert book", HttpStatus.BAD_REQUEST);
+        }
         book.setId(id);
         return book;
     }
